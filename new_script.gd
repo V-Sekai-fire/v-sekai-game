@@ -11,7 +11,7 @@ func _ready():
 	current_pose = get_pose(skeleton)
 	many_bone_ik = get_parent()
 
-func _process(_delta):
+func _process_pose():
 	var skeleton: Skeleton3D = %GeneralSkeleton
 	minimize_pose(skeleton)
 
@@ -72,13 +72,12 @@ func _call_operator(x: Array, gradient: Array) -> float:
 
 func minimize_pose(skeleton: Skeleton3D):
 	var x = [] # Start with the current pose
-	var count: int
 	for humanoid_i: int in range(humanoid.bone_size):
 		var i: int = skeleton.find_bone(humanoid.get_bone_name(humanoid_i))
+		var transform: Transform3D
 		if i == -1:
 			continue
-		count = count + 1
-		var transform = skeleton.get_bone_global_pose(i).orthonormalized()
+		transform = skeleton.get_bone_global_pose(i).orthonormalized()
 		x.append(transform.basis.x.x)
 		x.append(transform.basis.x.y)
 		x.append(transform.basis.x.z)
@@ -91,13 +90,16 @@ func minimize_pose(skeleton: Skeleton3D):
 		x.append(transform.origin.x)
 		x.append(transform.origin.y)
 		x.append(transform.origin.z)
-
+		
+		var bone_name = skeleton.get_bone_name(i)
+		if bone_name.is_empty():
+			continue
 		# Add the current twist value for the joint
-		var constraint_i: int = many_bone_ik.find_constraint(skeleton.get_bone_name(i))
+		var constraint_i: int = many_bone_ik.find_constraint(bone_name)
+		if constraint_i == -1:
+			continue
 		var current_twist = many_bone_ik.get_kusudama_twist(constraint_i)
 		if constraint_i == -1:
-			x.append(0)
-			x.append(TAU)
 			continue
 		x.append(current_twist.x)
 		x.append(current_twist.y)
@@ -105,17 +107,17 @@ func minimize_pose(skeleton: Skeleton3D):
 	var fx = 0.0 # Initial function value
 	var lower_bound = [] # Lower bound constraints
 	var upper_bound = [] # Upper bound constraints
-	var max_distance = 10
+	var max_distance = 2
 	
 	# Set the bounds for each joint
 	for i in range(x.size()):
 		if i == -1:
 			continue
 		if i % 14 < 9: # basis values
-			lower_bound.append(0)
+			lower_bound.append(-1)
 			upper_bound.append(1)
 		elif i % 14 < 11: # twist values
-			lower_bound.append(0)
+			lower_bound.append(-TAU)
 			upper_bound.append(TAU)
 		else: # translation values
 			lower_bound.append(-max_distance) 
@@ -123,19 +125,22 @@ func minimize_pose(skeleton: Skeleton3D):
 
 	# Call the minimize method
 	var result: Array = minimize(x, fx, lower_bound, upper_bound)[1]
-	if result.size() < count * 14:
-		print("Error: Not enough elements in result array")
-		return
+	print(result)
 	var bone_data = []
 
 	var result_i: int = 0
 	# Update the current pose with the result
 	for humanoid_i: int in range(humanoid.bone_size):
-		var i: int = skeleton.find_bone(humanoid.get_bone_name(humanoid_i))
+		var bone_name = humanoid.get_bone_name(humanoid_i)
+		if bone_name.is_empty():
+			continue
+		var i: int = skeleton.find_bone(bone_name)
 		if i == -1:
 			continue
 		var min_twist = Vector2(result[result_i*14+12], result[result_i*14+13])
 		var constraint_i: int = many_bone_ik.find_constraint(skeleton.get_bone_name(i))
+		if constraint_i == -1:
+			continue
 		many_bone_ik.set_kusudama_twist(constraint_i, min_twist)
 		result_i = result_i + 1
 	print(result)

@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://hmlgaxvwvm10"]
+
+[ext_resource type="Texture2D" uid="uid://dqibhosw1aaal" path="res://cloth2-fbx/source/cloth2_fbx/Avatar_Hisense_Girl_Cloth02.png" id="1_xhnuk"]
+
+[resource]
+resource_name = "Material #119"
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.588, 0.588, 0.588, 1)
+albedo_texture = ExtResource("1_xhnuk")
+emission_enabled = true
+emission_energy_multiplier = 0.0
