@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dqibhosw1aaal"
 path.s3tc="res://.godot/imported/Avatar_Hisense_Girl_Cloth02.png-e2a44592d3d360ec2dd7909589822147.s3tc.ctex"
+path.etc2="res://.godot/imported/Avatar_Hisense_Girl_Cloth02.png-e2a44592d3d360ec2dd7909589822147.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://cloth2-fbx/source/cloth2_fbx/Avatar_Hisense_Girl_Cloth02.png"
-dest_files=["res://.godot/imported/Avatar_Hisense_Girl_Cloth02.png-e2a44592d3d360ec2dd7909589822147.s3tc.ctex"]
+dest_files=["res://.godot/imported/Avatar_Hisense_Girl_Cloth02.png-e2a44592d3d360ec2dd7909589822147.s3tc.ctex", "res://.godot/imported/Avatar_Hisense_Girl_Cloth02.png-e2a44592d3d360ec2dd7909589822147.etc2.ctex"]
 
 [params]
 
