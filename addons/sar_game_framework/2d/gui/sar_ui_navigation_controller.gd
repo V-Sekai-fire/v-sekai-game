@@ -44,7 +44,7 @@ func _add_view_controller_to_content(p_view_controller: SarUIViewController) -> 
 @export var content: Control = null
 
 func get_top_view_controller() -> SarUIViewController:
-	return _view_controller_stack.front()
+	return null if _view_controller_stack.is_empty() else _view_controller_stack.front()
 
 
 func push_view_controller(p_view_controller: SarUIViewController, _animated: bool) -> void:
