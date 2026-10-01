@@ -448,6 +448,8 @@ func _packed_scene_upload_failed_callback(p_error_message: String) -> void:
 ##
 
 func _enter_tree():
+	if not Engine.is_editor_hint():
+		return
 	_editor_interface = Engine.get_singleton("EditorInterface")
 	if not _editor_interface:
 		push_error("EditorInterface singleton is not available")

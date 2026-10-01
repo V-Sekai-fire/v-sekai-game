@@ -58,7 +58,7 @@ func _write_custom_config(p_default_cfg: ConfigFile, p_custom_cfg: ConfigFile) -
 	p_custom_cfg.set_value("display", "window/stretch/stretch", get_content_scale_stretch_string(get_window().content_scale_stretch))
 	
 	# Physics
-	_write_project_setting(p_default_cfg, p_custom_cfg, "common", "physics_interpolation", true)
+	_write_project_setting(p_default_cfg, p_custom_cfg, "physics", "common/physics_interpolation", true)
 
 func _save_settings() -> void:
 	if not Engine.is_editor_hint():
